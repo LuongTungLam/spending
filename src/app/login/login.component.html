@@ -1,0 +1,38 @@
+<div *ngIf="!registerForm" class="flex align-items-center justify-content-center h-full">
+    <form class="bg-white p-5 box-shadow border-round">
+        <div class="text-center uppercase font-bold text-xl">Đăng nhập đê</div>
+        <div class="mt-3">
+            <input type="text" placeholder="Nhập tên đê" pInputText />
+        </div>
+        <div class="mt-2">
+            <input type="password" placeholder="Nhập mật khẩu đê" pInputText />
+        </div>
+        <div class="mt-3">
+            <button class="p-button-sm" pButton (click)="loginWithFacebook()">Đăng nhập bằng Facebook</button>
+            <button class="p-button-sm" pButton (click)="onLogout()">Đăng xuất</button>
+        </div>
+        <div class="mt-3">
+            <button class="p-button-sm" pButton (click)="onLogin()">Vào luôn</button>
+            <button class="ml-2 p-button-warning p-button-sm" (click)="onChangeRegister()" pButton>Tạo phát đê</button>
+        </div>
+    </form>
+</div>
+
+<div *ngIf="registerForm" class="flex align-items-center justify-content-center h-full">
+    <form class="bg-white p-5 box-shadow border-round">
+        <div class="text-center uppercase font-bold text-xl">Tạo nhanh lên</div>
+        <div class="mt-3">
+            <input type="text" placeholder="Nhập tên đê" pInputText />
+        </div>
+        <div class="mt-2">
+            <input type="password" placeholder="Nhập mật khẩu đê" pInputText />
+        </div>
+        <div class="mt-2">
+            <input type="password" placeholder="Nhập lại mật khẩu đê" pInputText />
+        </div>
+        <div class="mt-3">
+            <button class="p-button-sm" pButton (click)="onRegister()">Tạo luôn</button>
+            <button class="ml-2 p-button-warning p-button-sm" (click)="onBack()" pButton>Đéo tạo nữa</button>
+        </div>
+    </form>
+</div>
