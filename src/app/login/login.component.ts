@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthService, SocialUser } from 'angularx-social-login';
-import { SpendingdApi } from '../api/api';
+import { SpendingApi } from '../api/api';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +12,7 @@ export class LoginComponent implements OnInit {
   user!: SocialUser;
   loggedIn = false;
   registerForm = false;
-  constructor(private router: Router, private socialAuthService: SocialAuthService, private api: SpendingdApi) { }
+  constructor(private router: Router, private socialAuthService: SocialAuthService, private api: SpendingApi) { }
 
   ngOnInit(): void {
 
