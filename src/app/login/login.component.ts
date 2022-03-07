@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FacebookLoginProvider, SocialAuthService } from 'angularx-social-login';
+import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthService, SocialUser } from 'angularx-social-login';
+import { SpendingdApi } from '../api/api';
 
 @Component({
   selector: 'app-login',
@@ -8,12 +9,19 @@ import { FacebookLoginProvider, SocialAuthService } from 'angularx-social-login'
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  user!: SocialUser;
+  loggedIn = false;
   registerForm = false;
-  constructor(private router: Router, private socialAuthService: SocialAuthService) { }
+  constructor(private router: Router, private socialAuthService: SocialAuthService, private api: SpendingdApi) { }
 
   ngOnInit(): void {
+
     this.socialAuthService.authState.subscribe((user) => {
-      console.log(user);
+      this.user = user;
+      this.loggedIn = (user != null);
+      if (this.loggedIn) {
+        this.api.externalLogin(user.provider, user.idToken);
+      }
     });
   }
 
@@ -39,8 +47,9 @@ export class LoginComponent implements OnInit {
 
   loginWithFacebook(): void {
     this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID);
+  }
 
-    console.log(this.socialAuthService);
-    
+  loginWithGoogle() {
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
   }
 }

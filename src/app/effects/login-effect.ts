@@ -12,9 +12,11 @@ export class LoginEffect {
     login$ = createEffect(() => this.action$.pipe(
         ofType(login),
         switchMap(() => {
-            return this.loginService.signInWithFB()
+            return this.loginService.signInWithGG()
                 .pipe(
                     map((user: SocialUser) => {
+                        console.log(user);
+                        
                         return loginSuccess({ user: user })
                     })
                 )

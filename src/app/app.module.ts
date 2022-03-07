@@ -28,11 +28,13 @@ import {
   FacebookLoginProvider,
   SocialLoginModule,
   SocialAuthServiceConfig,
+  GoogleLoginProvider,
+  SocialAuthService,
 } from 'angularx-social-login';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import { LoginEffect } from './effects/login-effect';
-import { reducer } from './reducer/login-reducer';
+// import { StoreModule } from '@ngrx/store';
+// import { EffectsModule } from '@ngrx/effects';
+// import { LoginEffect } from './effects/login-effect';
+// import { reducer } from './reducer/login-reducer';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -40,13 +42,15 @@ FullCalendarModule.registerPlugins([
   interactionPlugin
 ]);
 
+
+
 @NgModule({
   imports: [
     SocialLoginModule,
-    StoreModule.forRoot({}),
-    StoreModule.forFeature("login", reducer),
-    EffectsModule.forRoot(),
-    EffectsModule.forFeature([LoginEffect]),
+    // StoreModule.forRoot({}),
+    // StoreModule.forFeature("login", reducer),
+    // EffectsModule.forRoot(),
+    // EffectsModule.forFeature([LoginEffect]),
     BrowserModule, BrowserAnimationsModule, AppRoutingModule, FormsModule, CommonModule, InputTextModule, ButtonModule, ChartModule, FullCalendarModule, HttpClientModule,
     TableModule, CarouselModule, ConfirmDialogModule, ToastModule, DialogModule, InputMaskModule, DropdownModule, CalendarModule,
   ],
@@ -63,11 +67,19 @@ FullCalendarModule.registerPlugins([
         providers: [
           {
             id: FacebookLoginProvider.PROVIDER_ID,
-            provider: new FacebookLoginProvider('1732593567072199'),
-          }
-        ]
+            provider: new FacebookLoginProvider('306811353878359'),
+          },
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider('808177454347-d2jbdk2gfkp49tndvgokltlp0vk8adjh.apps.googleusercontent.com'),
+          },
+        ],
+        onError: (err) => {
+          console.log(err);
+        }
       } as SocialAuthServiceConfig,
     },
+    SocialAuthService
   ],
   bootstrap: [AppComponent]
 })
