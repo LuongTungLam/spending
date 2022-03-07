@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 @Injectable({
     providedIn: 'root'
 })
-export class SpendingdApi {
+export class SpendingApi {
     apiUrl = 'https://covid19checking.com/api/';
 
     constructor(private http: HttpClient) { }
@@ -26,7 +26,7 @@ export class SpendingdApi {
     }
 
     externalLogin(provider: string, token: string) {
-        return this.http.post(this.apiUrl + 'Account/ExteralLogin', { provider: provider, token: token });
+        return this.http.post(this.apiUrl + 'Account/ExternalLogin', { provider: provider, token: token });
     }
 
 }
