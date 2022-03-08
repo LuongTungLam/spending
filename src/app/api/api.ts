@@ -10,7 +10,7 @@ export interface Extrernal {
 @Injectable({
     providedIn: 'root'
 })
-export class SpendingdApi {
+export class SpendingApi {
     apiUrl = 'https://covid19checking.com/api/';
     external!: Extrernal;
 
@@ -33,8 +33,6 @@ export class SpendingdApi {
 
     externalLogin(provider: string, token: string) {
         this.external = { provider: provider, token: token };
-        console.log(this.external);
-        
         return this.http.post(this.apiUrl + 'Account/ExternalLogin', this.external);
     }
 

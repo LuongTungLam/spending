@@ -1,7 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthService, SocialUser } from 'angularx-social-login';
 import { from, Observable } from 'rxjs';
-import { SpendingdApi } from '../api/api';
+import { SpendingApi } from '../api/api';
 
 
 @Injectable({
@@ -9,7 +9,7 @@ import { SpendingdApi } from '../api/api';
 })
 export class LoginService {
 
-    constructor(private authService: SocialAuthService, private api: SpendingdApi) { }
+    constructor(private authService: SocialAuthService, private api: SpendingApi) { }
 
     signInWithFB(): Observable<SocialUser> {
         return from(this.authService.signIn(FacebookLoginProvider.PROVIDER_ID));
