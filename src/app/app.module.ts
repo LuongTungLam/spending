@@ -24,6 +24,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { InputMaskModule } from 'primeng/inputmask';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
+import { AvatarModule } from 'primeng/avatar';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { TooltipModule } from 'primeng/tooltip';
+
 import {
   FacebookLoginProvider,
   SocialLoginModule,
@@ -52,7 +56,7 @@ FullCalendarModule.registerPlugins([
     // EffectsModule.forRoot(),
     // EffectsModule.forFeature([LoginEffect]),
     BrowserModule, BrowserAnimationsModule, AppRoutingModule, FormsModule, CommonModule, InputTextModule, ButtonModule, ChartModule, FullCalendarModule, HttpClientModule,
-    TableModule, CarouselModule, ConfirmDialogModule, ToastModule, DialogModule, InputMaskModule, DropdownModule, CalendarModule,
+    TableModule, CarouselModule, ConfirmDialogModule, ToastModule, DialogModule, InputMaskModule, DropdownModule, CalendarModule, AvatarModule, OverlayPanelModule, TooltipModule
   ],
   declarations: [AppComponent, HomeComponent, LoginComponent],
   exports: [HomeComponent, LoginComponent,],

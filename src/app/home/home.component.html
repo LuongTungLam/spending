@@ -5,7 +5,18 @@
             <span class="uppercase text-blue-500">Tieu</span>
         </div>
         <div class="flex-grow-1 "></div>
-        <button pButton class="p-button-sm uppercase p-button-danger" (click)="onLogout()">Cút luôn</button>
+        <p-overlayPanel #op>
+            <ng-template pTemplate>
+                <div class="text-center">{{user.name}}</div>
+                <button pButton class="p-button-sm uppercase p-button-danger mt-2" (click)="onLogout()">Cút
+                    luôn</button>
+            </ng-template>
+        </p-overlayPanel>
+        <p-button *ngIf="user != null" styleClass="p-0 p-button mr-2 p-button-rounded" [pTooltip]="user.firstName"
+            (click)="op.toggle($event)">
+            <img alt="logo" [src]="user.photoUrl" style="width: 2.5em;" />
+        </p-button>
+
     </div>
     <div class="grid m-0 p-3">
         <div class="col-12 md:col-4 p-3">
@@ -81,7 +92,8 @@
                     <ng-template pTemplate="caption">
                         <div class="flex">
                             <button pButton class="p-button-sm" (click)="onShowDialogOwe()">Thêm mới</button>
-                            <button pButton class="p-button-sm ml-2 p-button-danger" (click)="onShowDialogOwe()">Tính tiền</button>
+                            <button pButton class="p-button-sm ml-2 p-button-danger" (click)="onShowDialogOwe()">Tính
+                                tiền</button>
                             <div class="flex-grow-1"></div>
                             <span class="p-input-icon-left">
                                 <i class="pi pi-search"></i>

@@ -15,12 +15,15 @@ export class LoginComponent implements OnInit {
   constructor(private router: Router, private socialAuthService: SocialAuthService, private api: SpendingdApi) { }
 
   ngOnInit(): void {
-
     this.socialAuthService.authState.subscribe((user) => {
       this.user = user;
       this.loggedIn = (user != null);
       if (this.loggedIn) {
-        this.api.externalLogin(user.provider, user.idToken);
+        this.api.externalLogin(user.provider, user.idToken).subscribe((rs => {
+          console.log(rs);
+        }));
+        localStorage.setItem('socicalUser', JSON.stringify(this.user));
+        this.router.navigate(['home']);
       }
     });
   }

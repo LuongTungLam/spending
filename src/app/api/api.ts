@@ -2,11 +2,17 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from "rxjs";
 
+export interface Extrernal {
+    provider?: string,
+    token?: string
+}
+
 @Injectable({
     providedIn: 'root'
 })
 export class SpendingdApi {
     apiUrl = 'https://covid19checking.com/api/';
+    external!: Extrernal;
 
     constructor(private http: HttpClient) { }
     httpOptions = {
@@ -26,7 +32,10 @@ export class SpendingdApi {
     }
 
     externalLogin(provider: string, token: string) {
-        return this.http.post(this.apiUrl + 'Account/ExteralLogin', { provider: provider, token: token });
+        this.external = { provider: provider, token: token };
+        console.log(this.external);
+        
+        return this.http.post(this.apiUrl + 'Account/ExternalLogin', this.external);
     }
 
 }

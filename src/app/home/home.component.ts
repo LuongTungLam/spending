@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { SocialAuthService } from 'angularx-social-login';
+import { SocialAuthService, SocialUser } from 'angularx-social-login';
 import { MessageService } from 'primeng/api';
 import { EventService } from 'src/app/services/event-service';
 
@@ -32,17 +32,15 @@ export class HomeComponent implements OnInit {
   showDialogOwe = false;
   lstOc: any[] = [];
   owe: owe = {};
+  user!: SocialUser;
 
   constructor(private router: Router, private eventService: EventService, private messageService: MessageService, private socialAuthService: SocialAuthService) { }
 
   ngOnInit(): void {
-
-
-    console.log(this.socialAuthService);
-    
-    this.socialAuthService.authState.subscribe((user) => {
-      console.log(user);
-    });
+    var data = localStorage.getItem('socicalUser');
+    if (data) {
+      this.user = JSON.parse(data);
+    }
 
     this.spendings = [
       { id: 1, condition: 'Mua gạo', money: 250000, createdDate: '17-02-2022', createdBy: 'LamLT', status: 0 }
@@ -106,7 +104,7 @@ export class HomeComponent implements OnInit {
   }
 
   onLogout() {
-    this.socialAuthService.signOut();
+    localStorage.removeItem('socicalUser')
     this.router.navigate(['login']);
   }
 
