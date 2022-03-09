@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { SocialAuthService, SocialUser } from 'angularx-social-login';
+import { Store } from '@ngrx/store';
 import { MessageService } from 'primeng/api';
 import { EventService } from 'src/app/services/event-service';
+import { Expense } from '../api/api';
+import { HomeService } from '../services/home-service';
+import { AppState } from '../store';
+import { autoLogout, logout } from '../store/actions/login-actions';
+import { User } from '../store/reducers/user';
 
 export interface owe {
   id?: number,
@@ -32,19 +37,31 @@ export class HomeComponent implements OnInit {
   showDialogOwe = false;
   lstOc: any[] = [];
   owe: owe = {};
-  user!: SocialUser;
+  user!: User;
+  expense!: Expense;
 
-  constructor(private router: Router, private eventService: EventService, private messageService: MessageService, private socialAuthService: SocialAuthService) { }
+  constructor(private router: Router, private eventService: EventService, private messageService: MessageService, private store: Store<AppState>, private homeService: HomeService) { }
 
   ngOnInit(): void {
-    var data = localStorage.getItem('socicalUser');
-    if (data) {
-      this.user = JSON.parse(data);
+
+    this.store.select((state) => state.login.user).subscribe(rs => {
+      this.user = rs
+    })
+
+    this.expense = { Status: 'Active' }
+
+
+    this.onGetExpense(this.expense);
+
+    if (this.user) {
+      // setTimeout(() => {
+      //   this.store.dispatch(autoLogout({ user: this.user }));
+      // }, 5000)
     }
 
-    this.spendings = [
-      { id: 1, condition: 'Mua gạo', money: 250000, createdDate: '17-02-2022', createdBy: 'LamLT', status: 0 }
-    ]
+    // this.spendings = [
+    //   { id: 1, condition: 'Mua gạo', money: 250000, createdDate: '17-02-2022', createdBy: 'LamLT', status: 0 }
+    // ]
     this.owes = [
       { id: 1, condition: 'Mua gạo', money: 250000, createdDate: '17-02-2022', debtor: 'Oc Kai', createdBy: 'LamLT', status: 0 }
     ]
@@ -103,9 +120,14 @@ export class HomeComponent implements OnInit {
     };
   }
 
+  onGetExpense(_expense: Expense) {
+    this.homeService.getAllExpenses(_expense).subscribe(rs => {
+      this.spendings = rs.items.items;
+    })
+  }
+
   onLogout() {
-    localStorage.removeItem('socicalUser')
-    this.router.navigate(['login']);
+    this.store.dispatch(logout())
   }
 
   onShowDialogSpending() {

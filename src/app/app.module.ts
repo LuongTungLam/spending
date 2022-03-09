@@ -35,6 +35,17 @@ import {
   GoogleLoginProvider,
   SocialAuthService,
 } from 'angularx-social-login';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+import { reducers, metaReducers } from './store';
+import { EffectsModule } from '@ngrx/effects';
+import { LoginEffects } from './store/effects/login.effects';
+import { SpinnerEffects } from './store/effects/spinner.effects';
+import { AlertEffects } from './store/effects/alert.effects';
+import { RouteEffects } from './store/effects/route.effects';
+import { AuthEffects } from './store/effects/auth.effects';
+// import { StoreRouterConnectingModule } from '@ngrx/router-store';
 // import { StoreModule } from '@ngrx/store';
 // import { EffectsModule } from '@ngrx/effects';
 // import { LoginEffect } from './effects/login-effect';
@@ -51,12 +62,31 @@ FullCalendarModule.registerPlugins([
 @NgModule({
   imports: [
     SocialLoginModule,
-    // StoreModule.forRoot({}),
-    // StoreModule.forFeature("login", reducer),
-    // EffectsModule.forRoot(),
-    // EffectsModule.forFeature([LoginEffect]),
-    BrowserModule, BrowserAnimationsModule, AppRoutingModule, FormsModule, CommonModule, InputTextModule, ButtonModule, ChartModule, FullCalendarModule, HttpClientModule,
-    TableModule, CarouselModule, ConfirmDialogModule, ToastModule, DialogModule, InputMaskModule, DropdownModule, CalendarModule, AvatarModule, OverlayPanelModule, TooltipModule
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    FormsModule,
+    CommonModule,
+    InputTextModule,
+    ButtonModule,
+    ChartModule,
+    FullCalendarModule,
+    HttpClientModule,
+    TableModule,
+    CarouselModule,
+    ConfirmDialogModule,
+    ToastModule,
+    DialogModule,
+    InputMaskModule,
+    DropdownModule,
+    CalendarModule,
+    AvatarModule,
+    OverlayPanelModule,
+    TooltipModule,
+    StoreDevtoolsModule.instrument({ maxAge: 5, logOnly: environment.production }),
+    StoreModule.forRoot(reducers, { metaReducers }), !environment.production ? StoreDevtoolsModule.instrument() : [],
+    EffectsModule.forRoot([LoginEffects, SpinnerEffects, AlertEffects, RouteEffects, AuthEffects]),
+    // StoreRouterConnectingModule.forRoot(),
   ],
   declarations: [AppComponent, HomeComponent, LoginComponent],
   exports: [HomeComponent, LoginComponent,],

@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthService, SocialUser } from 'angularx-social-login';
+import * as AuthActions from '../store/actions/login-actions';
 import { SpendingApi } from '../api/api';
+import { AppState } from '../store';
 
 @Component({
   selector: 'app-login',
@@ -9,21 +12,21 @@ import { SpendingApi } from '../api/api';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  user!: SocialUser;
+  user: any;
   loggedIn = false;
   registerForm = false;
-  constructor(private router: Router, private socialAuthService: SocialAuthService, private api: SpendingApi) { }
+  constructor(private router: Router, private socialAuthService: SocialAuthService, private api: SpendingApi, private store: Store<AppState>, private route: Router) { }
 
   ngOnInit(): void {
+    // this.autoLogin();
+  }
+
+  autoLogin() {
     this.socialAuthService.authState.subscribe((user) => {
       this.user = user;
       this.loggedIn = (user != null);
       if (this.loggedIn) {
-        this.api.externalLogin(user.provider, user.idToken).subscribe((rs => {
-          console.log(rs);
-        }));
-        localStorage.setItem('socicalUser', JSON.stringify(this.user));
-        this.router.navigate(['home']);
+        this.store.dispatch(AuthActions.loginSocical({ provider: user.provider, token: user.idToken }))
       }
     });
   }
@@ -54,5 +57,6 @@ export class LoginComponent implements OnInit {
 
   loginWithGoogle() {
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
+    this.autoLogin();
   }
 }

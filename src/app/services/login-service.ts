@@ -1,6 +1,6 @@
-import { Injectable, OnInit } from '@angular/core';
-import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthService, SocialUser } from 'angularx-social-login';
-import { from, Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { SocialAuthService } from 'angularx-social-login';
+import { Observable } from 'rxjs';
 import { SpendingApi } from '../api/api';
 
 
@@ -11,12 +11,9 @@ export class LoginService {
 
     constructor(private authService: SocialAuthService, private api: SpendingApi) { }
 
-    signInWithFB(): Observable<SocialUser> {
-        return from(this.authService.signIn(FacebookLoginProvider.PROVIDER_ID));
-    }
+    socicalLogin(provider: string, token: string): Observable<any> {
+        return this.api.externalLogin(provider, token);
 
-    signInWithGG(): Observable<SocialUser> {
-        return from(this.authService.signIn(GoogleLoginProvider.PROVIDER_ID));
     }
 
     signOut() {
