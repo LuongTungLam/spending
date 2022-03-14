@@ -49,7 +49,8 @@
                 <p-table [value]="spendings" responsiveLayout="scroll">
                     <ng-template pTemplate="caption">
                         <div class="flex">
-                            <button pButton class="p-button-sm" (click)="onShowDialogSpending()">Thêm mới</button>
+                            <button pButton class="p-button-sm" (click)="onAddExpense()">Thêm mới</button>
+
                             <div class="flex-grow-1"></div>
                             <span class="p-input-icon-left">
                                 <i class="pi pi-search"></i>
@@ -59,28 +60,42 @@
                     </ng-template>
                     <ng-template pTemplate="header">
                         <tr>
-                            <th>Lý do</th>
+                            <th>Tiêu đề</th>
                             <th>Số tiền</th>
                             <th>Ngày tạo</th>
-                            <th>Người tạo</th>
-                            <th>Trạng thái</th>
+                            <th>Loại</th>
+                            <!-- <th>Trạng thái</th> -->
                             <th></th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-spending>
                         <tr>
-                            <td>{{spending.condition}}</td>
-                            <td>{{spending.money}}</td>
-                            <td>{{spending.createdDate}}</td>
-                            <td>{{spending.createdBy}}</td>
-                            <td>{{spending.status}}</td>
-                            <td>
+                            <td>{{spending.name}}</td>
+                            <td>{{spending.amount | number: spending.amount > 0 ? '3.0' : '1.0'}}đ</td>
+                            <td>{{spending.createdDate | date:'dd/MM/yyyy'}}</td>
+                            <td>{{convertShowType(spending.type)}}</td>
+                            <!-- <td>{{spending.status}}</td> -->
+                            <td class="text-center">
                                 <button pButton pRipple icon="pi pi-pencil"
-                                    class="p-button-rounded p-button-success mr-2"></button>
-                                <button pButton pRipple icon="pi pi-trash"
-                                    class="p-button-rounded p-button-warning"></button>
+                                    class="p-button-rounded p-button-success mr-2"
+                                    (click)="ondetailExpense(spending.id)"></button>
+                                <button pButton pRipple icon="pi pi-trash" [disabled]="spending.type ==='None'"
+                                    class="p-button-rounded p-button-warning"
+                                    (click)="confirmDelete($event,spending.id)"></button>
                             </td>
                         </tr>
+                    </ng-template>
+                    <ng-template pTemplate="summary">
+                        <div class="flex align-items-center justify-content-between bg-white">
+                            <div class="ml-2 p-1 surface-400 border-round flex align-items-center">
+                                <p-dropdown [options]="lstSpecific" [(ngModel)]="isSpecific" optionLabel="name"
+                                    optionValue="value" appendTo="body" (onChange)="onChangeTotal()">
+                                </p-dropdown>
+                                <div class="ml-2">Tổng: {{total| number: total > 0 ? '3.0' : '1.0'}} đ</div>
+                            </div>
+                            <p-paginator [rows]="paginator.pageSize" [totalRecords]="paginator.totalCount"
+                                [rowsPerPageOptions]="[5,10,20]" (onPageChange)="paginate($event)"></p-paginator>
+                        </div>
                     </ng-template>
                 </p-table>
             </div>
@@ -120,11 +135,11 @@
                             <td>{{owe.debtor}}</td>
                             <td>{{owe.createdBy}}</td>
                             <td>{{owe.status}}</td>
-                            <td>
+                            <td class="text-center">
                                 <button pButton pRipple icon="pi pi-pencil"
                                     class="p-button-rounded p-button-success mr-2"></button>
-                                <button pButton pRipple icon="pi pi-trash"
-                                    class="p-button-rounded p-button-warning"></button>
+                                <!-- <button pButton pRipple icon="pi pi-trash"
+                                    class="p-button-rounded p-button-warning"></button> -->
                             </td>
                         </tr>
                     </ng-template>
@@ -133,21 +148,38 @@
         </div>
     </div>
 
-    <p-dialog [(visible)]="showDialogSpending" class="w-20rem" [modal]="true" [draggable]="false">
+    <p-dialog [(visible)]="showDialogSpending" styleClass="w-30rem" [modal]="true" [draggable]="false">
         <ng-template pTemplate="header">
             <div class="uppercase">
                 Vào là mất tiền
             </div>
         </ng-template>
         <form>
-            <input pInputText class="w-full" placeholder="Mua cái l*n gì thì ghi vào" />
-            <input pInputText class="w-full mt-3" placeholder="Mất bao tiền" />
-            <div class="w-full mt-3">
-                <p-inputMask mask="99/99/9999" placeholder="Ngày nào" slotChar="mm/dd/yyyy"></p-inputMask>
+            <div class="field">
+                <input pInputText class="w-full" [(ngModel)]="expense.name" placeholder="Nhập tiêu đề" id="name"
+                    name="name" required />
+                <small class="p-error" *ngIf="submitted && !expense.name">Không được bỏ trống tiêu đề.</small>
+            </div>
+            <div class="field">
+                <input pInputText class="w-full" [(ngModel)]="expense.description" placeholder="Nhập nội dung"
+                    name="description" required />
+                <small class="p-error" *ngIf="submitted && !expense.description">Không được bỏ trống nội dung.</small>
+            </div>
+            <div class="field">
+                <p-inputNumber class="w-full " placeholder="Mất bao tiền" [(ngModel)]="expense.amount" name="amount"
+                    [min]="0">
+                </p-inputNumber>
+                <small class="p-error" *ngIf="submitted && !expense.amount">Không được bỏ trống số tiền.</small>
+            </div>
+            <div class="w-full field">
+                <p-dropdown [options]="lstType" [(ngModel)]="expense.type" optionLabel="name" optionValue="name"
+                    name="type" appendTo="body" [disabled]="!isAdd"></p-dropdown>
+                <!-- <p-inputMask mask="99/99/9999" placeholder="Ngày nào" slotChar="mm/dd/yyyy"></p-inputMask> -->
             </div>
         </form>
         <ng-template pTemplate="footer">
-            <button pButton class="p-button-sm p-button-success" (click)="onSaveSpending()">Mất tiền</button>
+            <button pButton class="p-button-sm p-button-success" [disabled]="expense.type ==='None'"
+                (click)="onSaveSpending()">Mất tiền</button>
         </ng-template>
     </p-dialog>
 
@@ -172,4 +204,6 @@
             <button pButton class="p-button-sm p-button-success" (click)="onSaveOwe()">Cho nợ</button>
         </ng-template>
     </p-dialog>
+
+    <p-confirmPopup></p-confirmPopup>
 </div>

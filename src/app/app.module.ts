@@ -27,6 +27,9 @@ import { CalendarModule } from 'primeng/calendar';
 import { AvatarModule } from 'primeng/avatar';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TooltipModule } from 'primeng/tooltip';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { PaginatorModule } from 'primeng/paginator';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
 
 import {
   FacebookLoginProvider,
@@ -83,6 +86,9 @@ FullCalendarModule.registerPlugins([
     AvatarModule,
     OverlayPanelModule,
     TooltipModule,
+    InputNumberModule,
+    PaginatorModule,
+    ConfirmPopupModule,
     StoreDevtoolsModule.instrument({ maxAge: 5, logOnly: environment.production }),
     StoreModule.forRoot(reducers, { metaReducers }), !environment.production ? StoreDevtoolsModule.instrument() : [],
     EffectsModule.forRoot([LoginEffects, SpinnerEffects, AlertEffects, RouteEffects, AuthEffects]),
